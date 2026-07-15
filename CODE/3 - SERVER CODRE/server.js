@@ -16,18 +16,21 @@ const users = [
     {
         id: 1,
         name: "john",
+        email: "john@gmail.com",
         password: "1234",
         role: "student"
     },
     {
         id: 2,
         name: "alice",
+        email: "alice@gmail.com",
         password: "abcd",
         role: "student"
     },
     {
         id: 3,
         name: "teacher",
+        email: "teacher@gmail.com",
         password: "admin",
         role: "teacher"
     }
@@ -66,13 +69,13 @@ const scores = [
 
 app.post("/login", (req, res) => {
 
-    const { name, password } = req.body;
+    const { email, password } = req.body;
 
-    console.log("POST /login", name);
+    console.log("POST /login", email);
 
 
     const user = users.find(
-        u => u.name === name && u.password === password
+        u => u.email === emial && u.password === password
     );
 
 
@@ -94,7 +97,7 @@ app.post("/login", (req, res) => {
         },
         SECRET,
         {
-            expiresIn: "1h"
+            expiresIn: "2m"
         }
     );
 

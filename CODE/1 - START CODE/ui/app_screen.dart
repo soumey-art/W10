@@ -1,6 +1,7 @@
+import 'package:authentication_app/CODE/1%20-%20START%20CODE/data/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'auth_screen.dart';
- 
+
 class AppScreen extends StatefulWidget {
   const AppScreen({super.key});
 
@@ -9,17 +10,20 @@ class AppScreen extends StatefulWidget {
 }
 
 class _AppScreenState extends State<AppScreen> {
- 
-  void onLogin()  {
-       setState(() {});
+  void onLogin() {
+    setState(() {});
   }
 
   Widget get content {
-
+    final session = AuthenticationService.instance.session;
     // if logged in -> Display ScoresScreen
-
+    if (session != null) {
+      return ScoresScreen();
+    }
     // otherwise -> DisplayAuthScreen
-    return AuthScreen(onLogin: onLogin);
+    else {
+      return AuthScreen(onLogin: onLogin);
+    }
   }
 
   @override

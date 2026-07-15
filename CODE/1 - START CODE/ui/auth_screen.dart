@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
- 
+import '../data/services/auth_service.dart';
+
 import 'theme.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -15,21 +16,41 @@ class _AuthScreenState extends State<AuthScreen> {
   String? errorMessage;
 
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   void onLoginPressed() async {
     // Wrap all the code with a try/catch on AuthException: if exception, disaplyer error with the exception
+    // Get the name + email+ password from controllers
+    try {
+      final name = nameController.text;
+      final email = emailController.text;
+      final password = passwordController.text;
+      // Validate the name+password => if empty display error :  "Name and password shall be entered"
+      if (name.isEmpty || email.isEmpty || password.isEmpty) {
+        setState(() {
+          errorMessage = "Name, email and password shall be entered";
+        });
 
-    // Get the name + password from controllers
-
-    // Validate the name+password => if empty display error :  "Name and password shall be entered"
-    
-    // Call AuthenticationService instance to login
-
-    // Iff success, notify the parent (use the callback) and refresh the state
-
-    // If failure disaply the error and refresh
-   
+        return;
+      }
+      // Call AuthenticationService instance to login
+      await AuthenticationService.instance.login(
+        name,
+        email,
+        password,
+      );
+      // Iff success, notify the parent (use the callback) and refresh the state
+      setState(() {
+        errorMessage = null;
+      });
+      // If failure disaply the error and refresh
+      widget.onLogin();
+    } on AuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
   }
 
   @override
@@ -62,6 +83,15 @@ class _AuthScreenState extends State<AuthScreen> {
 
             const SizedBox(height: 20),
 
+            //email
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                labelText: "Email",
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.email),
+              ),
+            ),
             // Password
             TextField(
               controller: passwordController,
