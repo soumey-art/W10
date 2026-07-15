@@ -75,7 +75,7 @@ app.post("/login", (req, res) => {
 
 
     const user = users.find(
-        u => u.email === emial && u.password === password
+        u => u.email === email && u.password === password
     );
 
 

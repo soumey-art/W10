@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+ 
 import '../data/services/auth_service.dart';
-
 import 'theme.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -21,31 +21,44 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void onLoginPressed() async {
     // Wrap all the code with a try/catch on AuthException: if exception, disaplyer error with the exception
-    // Get the name + email+ password from controllers
+    // Get the name + password from controllers
     try {
       final name = nameController.text;
       final email = emailController.text;
       final password = passwordController.text;
       // Validate the name+password => if empty display error :  "Name and password shall be entered"
-      if (name.isEmpty || email.isEmpty || password.isEmpty) {
-        setState(() {
-          errorMessage = "Name, email and password shall be entered";
-        });
+        if (email.isEmpty || password.isEmpty) {
+          setState(() {
+            errorMessage = "Email and password are required";
+          });
+          return;
+        }
 
-        return;
-      }
-      // Call AuthenticationService instance to login
+        if (!email.contains("@")) {
+          setState(() {
+            errorMessage = "Invalid email";
+          });
+          return;
+        }
+
+        if (password.length < 4) {
+          setState(() {
+            errorMessage = "Password must be at least 4 characters";
+          });
+          return;
+        }
+        // Call AuthenticationService instance to login
       await AuthenticationService.instance.login(
-        name,
-        email,
-        password,
+        name: name,
+        email: email,
+        password: password,
       );
-      // Iff success, notify the parent (use the callback) and refresh the state
-      setState(() {
+    // Iff success, notify the parent (use the callback) and refresh the state
+    setState(() {
         errorMessage = null;
       });
-      // If failure disaply the error and refresh
-      widget.onLogin();
+    // If failure disaply the error and refresh
+     widget.onLogin();
     } on AuthException catch (e) {
       setState(() {
         errorMessage = e.message;
@@ -67,7 +80,7 @@ class _AuthScreenState extends State<AuthScreen> {
             const SizedBox(height: 20),
 
             // Login image
-            Image.asset("assets/auth/login.png", height: 250),
+            Image.asset("assets/images.jpg", height: 250),
 
             const SizedBox(height: 40),
 
@@ -83,6 +96,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
             const SizedBox(height: 20),
 
+
             //email
             TextField(
               controller: emailController,
@@ -92,6 +106,9 @@ class _AuthScreenState extends State<AuthScreen> {
                 prefixIcon: Icon(Icons.email),
               ),
             ),
+
+            const SizedBox(height: 20),
+
             // Password
             TextField(
               controller: passwordController,

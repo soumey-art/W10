@@ -33,9 +33,7 @@ class ScoresRepository {
       return data.map((json) => Score.fromJSon(json)).toList();
     } else {
       // If no success throw exception
-      throw Exception(
-        "Failed to load scores"
-      );
+      throw Exception("Failed to load scores");
     }
   }
 }
